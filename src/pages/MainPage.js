@@ -1,6 +1,8 @@
 import { Router } from "../main";
 
 export const MainPage = () => {
+  const user = JSON.parse(localStorage.getItem("user"));
+
   const handleLogout = (e) => {
     e.preventDefault();
     localStorage.removeItem("user");
@@ -27,7 +29,7 @@ export const MainPage = () => {
           <ul class="flex justify-around">
             <li><a href="/" class="text-blue-600" id="home">홈</a></li>
             <li><a href="/profile" id="profile" class="text-gray-600">프로필</a></li>
-            <li><a href="/#" id="logout" class="text-gray-600">로그아웃</a></li>
+            ${user ? ` <li><a href="/#" id="logout" class="text-gray-600">로그아웃</a></li>` : `<li><a href="/#" id="logout" class="text-gray-600">로그인</a></li>`}
           </ul>
         </nav>
 

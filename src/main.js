@@ -11,6 +11,12 @@ export const Router = (function () {
   }
 
   function navigate(path) {
+    if (path === "/login" && isLoggedIn()) {
+      window.history.replaceState({}, "", "/");
+      render("/");
+      return;
+    }
+
     if (!routes[path]) {
       path = "/404";
     }
@@ -19,6 +25,7 @@ export const Router = (function () {
     render(path); // 컴포넌트 렌더링
   }
 
+  // render: 주어진 경로에 맞는 컴포넌트를 렌더링하는 역할, cf. popState와는 다르다
   function render(path) {
     const appElement = document.getElementById("root");
     if (!appElement) {
@@ -29,17 +36,25 @@ export const Router = (function () {
     appElement.innerHTML = component();
   }
 
-  // popstate: 뒤로가기, 앞으로가기 버튼을 눌렀을 때 발생하는 이벤트
+  // popState: 뒤로가기, 앞으로가기 버튼을 눌렀을 때 발생하는 이벤트
+  // 사용자가 url을 변경했을 때 이벤트가 발생
   function handlePopState() {
     const currentPath = window.location.pathname;
 
+    // 로그인된 사용자의 접근 제어
     if (currentPath === "/profile" && !isLoggedIn()) {
-      window.history.replaceState({}, "", "/login"); // replaceState: 현재 페이지의 상태를 새로 고쳐서 history entry를 교체합니다
+      window.history.replaceState({}, "", "/login");
       render("/login");
       return;
     }
 
-    render(window.location.pathname);
+    // 로그인된 사용자가 /login 페이지에 접근하려고 하면 메인 페이지로 리디렉트
+    if (currentPath === "/login" && isLoggedIn()) {
+      window.history.replaceState({}, "", "/");
+      render("/");
+    }
+
+    render(currentPath);
   }
 
   function init() {
