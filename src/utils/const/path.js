@@ -1,6 +1,6 @@
-export const path = {
+export const PATH = {
   MAIN: "/",
-  PROFILE: "/profile",
   LOGIN: "/login",
-  ERROR: "/error",
+  PROFILE: "/profile",
+  NOT_FOUND: "error",
 };

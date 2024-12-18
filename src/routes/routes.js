@@ -1,12 +1,12 @@
-import { ErrorPage } from "../pages/ErrorPage";
-import { LoginPage } from "../pages/LoginPage";
-import { MainPage } from "../pages/MainPage";
-import { ProfilePage } from "../pages/ProfilePage";
-import { path } from "../utils/const/path";
+import { PATH } from "../utils/const/path.js";
+import { mainPage } from "../pages/MainPage.js";
+import { profilePage } from "../pages/ProfilePage.js";
+import { loginPage } from "../pages/LoginPage.js";
+import { notFoundPage } from "../pages/NotFoundPage.js";
 
 export const routes = {
-  [path.MAIN]: MainPage,
-  [path.PROFILE]: ProfilePage,
-  [path.LOGIN]: LoginPage,
-  [path.ERROR]: ErrorPage,
+  [PATH.MAIN]: mainPage,
+  [PATH.PROFILE]: profilePage,
+  [PATH.LOGIN]: loginPage,
+  [PATH.NOT_FOUND]: notFoundPage,
 };

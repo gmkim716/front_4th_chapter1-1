@@ -1,55 +1,73 @@
-import { path } from "../utils/const/path";
-
 export class CreateRouter {
-  constructor(routes) {
+  constructor(routes, { mode = "history" }) {
     this.routes = routes;
+    this.isHistory = mode === "history";
+
+    Object.values(routes).forEach((route) => route.setRouter(this));
   }
 
   init() {
-    this.popstateListener();
     this.linkEventListeners();
-    this.navigate(window.location.pathname);
+    if (this.isHistory) {
+      this.popstateListener();
+      this.navigate(window.location.pathname);
+    } else {
+      this.hashchangeListener();
+      this.navigate(window.location.hash);
+    }
   }
 
   navigate(currentPath) {
-    const handler = this.routes[currentPath] || this.routes.error;
+    const validatePath = this.isHistory
+      ? currentPath
+      : currentPath.replace("#", "");
+    const template = this.routes[validatePath] || this.routes.error;
 
-    // 프로필로 이동할 때 로그인 정보가 없으면 로그인 페이지로 리다이렉트
-    if (currentPath === path.PROFILE) {
-      const userInfo = JSON.parse(localStorage.getItem("user"));
-      if (!userInfo) {
-        this.redirectionToLogin();
-        return (document.getElementById("root").innerHTML =
-          this.routes[path.LOGIN]());
-      }
+    if (this.isHistory) {
+      this.pushHistoryState(validatePath);
+    } else {
+      this.hashState(validatePath);
     }
 
-    return (document.getElementById("root").innerHTML = handler());
+    return template.render();
   }
 
   linkEventListeners() {
     document.addEventListener("click", (e) => {
       if (e.target.tagName === "A") {
         e.preventDefault();
+
         const path = e.target.getAttribute("href");
-        window.history.pushState({}, path, window.location.origin + path);
+
+        if (path === "#") return;
+
+        if (this.isHistory) {
+          this.pushHistoryState(path);
+        } else {
+          this.hashState(path);
+        }
         this.navigate(path);
       }
     });
-  }
-
-  redirectionToLogin() {
-    window.history.replaceState(
-      {},
-      path.LOGIN,
-      window.location.origin + path.LOGIN,
-    );
-    this.navigate(path.LOGIN);
   }
 
   popstateListener() {
     window.addEventListener("popstate", () => {
       this.navigate(window.location.pathname);
     });
+  }
+
+  hashchangeListener() {
+    window.addEventListener("hashchange", () => {
+      this.navigate(window.location.hash);
+    });
+  }
+
+  pushHistoryState(path) {
+    window.history.pushState({}, path, window.location.origin + path);
+  }
+
+  hashState(path) {
+    window.location.hash = path;
   }
 }
