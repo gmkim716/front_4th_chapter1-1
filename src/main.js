@@ -16,7 +16,7 @@ const isAuthenticated = () => {
   return localStorage.getItem("isLoggedIn") === "true";
 };
 
-const renderPage = () => {
+export const renderPage = () => {
   const path = window.location.pathname;
 
   // 현재 URL 경로에 따라 적절한 페이지를 렌더링한다
