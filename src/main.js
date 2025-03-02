@@ -11,6 +11,11 @@ import { ProfilePage } from "./pages/ProfilePage.js";
 import { LoginPage } from "./pages/LoginPage.js";
 import { ErrorPage } from "./pages/ErrorPage.js";
 
+// 사용자의 로그인 상태를 확인하는 함수
+const isAuthenticated = () => {
+  return localStorage.getItem("isLoggedIn") === "true";
+};
+
 const renderPage = () => {
   const path = window.location.pathname;
 
@@ -21,7 +26,12 @@ const renderPage = () => {
       pageContent = MainPage();
       break;
     case "/profile":
-      pageContent = ProfilePage();
+      if (!isAuthenticated()) {
+        window.history.replaceState({}, "", "/login");
+        pageContent = LoginPage();
+      } else {
+        pageContent = ProfilePage();
+      }
       break;
     case "/login":
       pageContent = LoginPage();
