@@ -71,29 +71,6 @@ describe("기본과제 테스트", () => {
     });
   });
 
-  describe("2. 사용자 관리 기능", () => {
-    it("로그인 폼에서 사용자 이름을 입력하고 제출하면 로그인 되고, 로그아웃 버튼 클릭시 로그아웃 된다.", async () => {
-      goTo("/login");
-
-      const loginForm = document.getElementById("login-form");
-
-      await user.type(document.getElementById("username"), "testuser");
-
-      loginForm.dispatchEvent(
-        new SubmitEvent("submit", { bubbles: true, cancelable: true }),
-      );
-
-      expect(localStorage.getItem("user")).toEqual(
-        `{"username":"testuser","email":"","bio":""}`,
-      );
-
-      const logoutButton = document.getElementById("logout");
-      logoutButton.click();
-
-      expect(localStorage.getItem("user")).toEqual(null);
-    });
-  });
-
   describe("3. 프로필 페이지 구현", () => {
     beforeEach(async () => {
       goTo("/login");

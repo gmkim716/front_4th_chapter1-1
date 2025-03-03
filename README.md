@@ -59,3 +59,101 @@ ex) 인증이 필요한 페이지로 접근했을 때 로그인 페이지로 리
 현대 웹 개발에서는 대부분 HistoryAPI 방식을 선호하며, 해시기반 라우팅보다 깔끔한 URL을 제공하고 더 나은 SEO를 제공하는 특징이 있습니다
 
 결론적으로, 특별한 이유가 없다면 History API 방식으로 개발을 진행하면 됩니다.
+
+
+## Errors
+
+### React 구현 방식을 따라 아래처럼 진행하면 동작하지 않음
+
+- 페이지가 다시 렌더링될 때마다 동한 선택자에 이벤트 리스너가 중복해서 추가됩니다: 렌더링이 이어질 때마다 이벤트 핸들러가 누적해서 실행
+- 게시물이 중복 등록되거나 여러 번 등록되는 버그로 이어질 수 있습니다
+
+#### AS-IS
+```js
+export const MainPage = () => {
+   const { loggedIn, posts } = globalStore.getState();
+
+   // 글 추가 함수 정의
+   const addPost = (content) => {
+      const { currentUser, posts } = globalStore.getState();
+      globalStore.setState({
+         posts: [
+            ...posts,
+            {
+               id: Date.now(),
+               author: currentUser.name,
+               time: "방금 전",
+               content: content,
+            },
+         ],
+      });
+   };
+
+   // 글로벌 이벤트 리스너 등록
+   addEvent("click", "#post-submit", () => {
+      const content = document.getElementById("post-content").value;
+      addPost(content);
+   });
+
+   return `
+    <div class="bg-gray-100 min-h-screen flex justify-center">
+      <div class="max-w-md w-full">
+        ${Header({ loggedIn })}
+        
+        <main class="p-4">
+          ${loggedIn ? PostForm() : ""}
+          <div id="posts-container" class="space-y-4">
+            ${posts.map(Post).join("")}
+          </div>
+        
+        ${Footer()}
+      </div>
+    </div>
+  `;
+};
+```
+
+#### TO-BE
+```js
+export const MainPage = () => {
+   const { loggedIn, posts } = globalStore.getState();
+
+   return `
+    <div class="bg-gray-100 min-h-screen flex justify-center">
+      <div class="max-w-md w-full">
+        ${Header({ loggedIn })}
+        
+        <main class="p-4">
+          ${loggedIn ? PostForm() : ""}
+          <div id="posts-container" class="space-y-4">
+            ${posts.map(Post).join("")}
+          </div>
+        
+        ${Footer()}
+      </div>
+    </div>
+  `;
+};
+
+// 글 추가 함수 정의
+const addPost = (content) => {
+   const { currentUser, posts } = globalStore.getState();
+   globalStore.setState({
+      posts: [
+         ...posts,
+         {
+            id: Date.now(),
+            author: currentUser.name,
+            time: "방금 전",
+            content: content,
+         },
+      ],
+   });
+};
+
+// 글로벌 이벤트 리스너 등록
+addEvent("click", "#post-submit", () => {
+   const content = document.getElementById("post-content").value;
+   addPost(content);
+});
+```

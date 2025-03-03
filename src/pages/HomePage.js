@@ -1,10 +1,9 @@
-import { globalStore } from "../../stores";
-import { addEvent } from "../../utils";
-import { Header, Footer, Post, PostForm } from "../components";
+import { Footer, Header, Post, PostForm } from "../components";
+import { globalStore } from "../../stores/index.js";
+import { addEvent } from "../../utils/index.js";
 
-export const MainPage = () => {
+export const HomePage = () => {
   const { loggedIn, posts } = globalStore.getState();
-
   return `
     <div class="bg-gray-100 min-h-screen flex justify-center">
       <div class="max-w-md w-full">
@@ -15,6 +14,7 @@ export const MainPage = () => {
           <div id="posts-container" class="space-y-4">
             ${posts.map(Post).join("")}
           </div>
+        </main>
         
         ${Footer()}
       </div>
@@ -22,7 +22,6 @@ export const MainPage = () => {
   `;
 };
 
-// 글 추가 함수 정의
 const addPost = (content) => {
   const { currentUser, posts } = globalStore.getState();
   globalStore.setState({
@@ -38,7 +37,6 @@ const addPost = (content) => {
   });
 };
 
-// 글로벌 이벤트 리스너 등록
 addEvent("click", "#post-submit", () => {
   const content = document.getElementById("post-content").value;
   addPost(content);

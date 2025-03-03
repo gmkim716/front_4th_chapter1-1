@@ -1,36 +1,8 @@
-import { renderPage } from "../main.js";
+import { globalStore } from "../../stores/index.js";
+import { userStorage } from "../../storages/index.js";
+import { addEvent } from "../../utils/index.js";
 
 export const LoginPage = () => {
-  const handleLoginSubmit = (e) => {
-    e.preventDefault();
-
-    const username = document.getElementById("username").value;
-
-    // 사용자 정보를 localStorage에 저장합니다
-    const user = {
-      username: username,
-      email: "",
-      bio: "",
-    };
-
-    localStorage.setItem("user", JSON.stringify(user));
-    localStorage.setItem("isLoggedIn", "true");
-
-    // 메인 페이지로 리다이렉션
-    window.history.pushState({}, "", "/");
-    renderPage();
-  };
-
-  const setupLoginPageEvents = () => {
-    const loginForm = document.getElementById("login-form");
-    if (loginForm) {
-      loginForm.addEventListener("submit", handleLoginSubmit);
-    }
-  };
-
-  // setTimeout을 사용하여 HTML이 렌더링된 후 이벤트 리스너 설정
-  setTimeout(setupLoginPageEvents, 0);
-
   return `
     <main class="bg-gray-100 flex items-center justify-center min-h-screen">
       <div class="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
@@ -55,3 +27,18 @@ export const LoginPage = () => {
     </main>
   `;
 };
+
+function login(username) {
+  const user = { username, email: "", bio: "" };
+  globalStore.setState({
+    currentUser: user,
+    loggedIn: true,
+  });
+  userStorage.set(user);
+}
+
+addEvent("submit", "#login-form", (e) => {
+  e.preventDefault();
+  const username = document.getElementById("username").value;
+  login(username);
+});
