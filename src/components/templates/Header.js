@@ -1,7 +1,7 @@
 import { globalStore } from "../../../stores/index.js";
 import { userStorage } from "../../../storages/index.js";
 import { addEvent } from "../../../utils/index.js";
-import { router } from "../../../router.js";
+import { router } from "../../router.js";
 
 const getNavItemClass = (path) => {
   const currentPath = router.get().path;

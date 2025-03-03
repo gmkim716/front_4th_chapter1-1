@@ -1,5 +1,5 @@
 import "./main.js";
-import { router } from "../router.js";
+import { router } from "./router.js";
 import { createHashRouter } from "./lib/createHashRouter.js";
 import { HomePage } from "./pages/HomePage.js";
 import { globalStore } from "../stores/index.js";

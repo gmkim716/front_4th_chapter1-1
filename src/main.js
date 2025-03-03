@@ -1,6 +1,6 @@
 import { globalStore } from "../stores/index.js";
 import { render } from "./render.js";
-import { router } from "../router.js";
+import { router } from "./router.js";
 import { createRouter } from "./lib/index.js";
 import { ForbiddenError, UnauthorizedError } from "./errors";
 import { LoginPage, ProfilePage } from "./pages/index.js";

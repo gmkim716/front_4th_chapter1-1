@@ -1,4 +1,4 @@
-import { router } from "../router.js";
+import { router } from "./router.js";
 import { registerGlobalEvents } from "../utils/index.js";
 import { ForbiddenError, UnauthorizedError } from "./errors";
 import { NotFoundPage } from "./pages/index.js";

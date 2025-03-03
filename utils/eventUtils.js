@@ -39,7 +39,7 @@ export const registerGlobalEvents = (() => {
   };
 })();
 
-// 새로운 이베트 핸들러를 등록
+// 새로운 이벤트 핸들러를 등록
 export const addEvent = (eventType, selector, handler) => {
   // 지정된 이벤트 타입에 대한 핸들러 맵이 없으면 새로 생성
   if (!eventHandlers[eventType]) {
