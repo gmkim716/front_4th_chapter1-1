@@ -60,6 +60,42 @@ ex) 인증이 필요한 페이지로 접근했을 때 로그인 페이지로 리
 
 결론적으로, 특별한 이유가 없다면 History API 방식으로 개발을 진행하면 됩니다.
 
+### 배럴 파일을 만들면 생기는 이점
+
+- 코드 경로를 단순화해서 파일을 깔끔하게 정리할 수 있다 
+
+```js
+// 배럴 파일 없이 개별 임포트
+import { Button } from './components/Button';
+import { Checkbox } from './components/Checkbox';
+import { TextField } from './components/TextField';
+
+// 배럴 파일 사용
+import { Button, Checkbox, TextField } from './components';
+```
+
+## 라우터 가드 구현
+
+```js
+const AuthGuard = (validation, CustomError, Component) => {
+   return () => {
+      const { loggedIn } = globalStore.getState();
+      if (validation(loggedIn)) {
+         throw new CustomError();
+      }
+      return Component();
+   };
+};
+
+router.set(
+        createRouter({
+           "/": HomePage,
+           "/login": AuthGuard(Boolean, ForbiddenError, LoginPage),
+           "/profile": AuthGuard((value) => !value, UnauthorizedError, ProfilePage),
+        }),
+);
+```
+
 
 ## Errors
 

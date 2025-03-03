@@ -1,9 +1,9 @@
 import { router } from "../router.js";
 import { registerGlobalEvents } from "../utils/index.js";
-import { ForbiddenError } from "./errors/ForbiddenError.js";
-import { UnauthorizedError } from "./errors/UnauthorizedError.js";
+import { ForbiddenError, UnauthorizedError } from "./errors";
 import { NotFoundPage } from "./pages/index.js";
 
+// SPA의 원리인 id=root인 태그에 렌더링된 HTML을 삽입하는 함수
 export const render = () => {
   const $root = document.querySelector("#root");
 
